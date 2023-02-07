@@ -1,0 +1,1157 @@
+zabbix_export:
+  version: '6.4'
+  date: '2023-02-07T08:13:16Z'
+  template_groups:
+    -
+      uuid: 3dcd5bbe90534f9e8eb5c2d53756af63
+      name: Templates/Power
+  templates:
+    -
+      uuid: cb228aa0f4d24281b2790e484dce63c9
+      template: Shtyl_UPS
+      name: Shtyl_UPS
+      description: |
+        https://github.com/dvilin/Shtyl-Zabbix
+        rus ver.1
+      groups:
+        -
+          name: Templates/Power
+      items:
+        -
+          uuid: 3d20bae319c14ef6b9e4b92a69fa0906
+          name: ifPhysAddress
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.6.1
+          key: ifPhysAddress
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: MACADDRESS_A
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 7315d693688d4aa1acff44f57b57c41a
+          name: Contact
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.4.0
+          key: sysContact
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: CONTACT
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 877dba995f5a43ed871bdef0645e17a9
+          name: 'Device Description'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.1.0
+          key: sysDescr
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: OS_FULL
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 0a32c904219349f7a81817aab348bc25
+          name: 'Device Location'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.6.0
+          key: sysLocation
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: LOCATION
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 109a694f9c164273b6cca3e0484a393c
+          name: 'Device Name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.5.0
+          key: sysName
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: NAME
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: ab6427e6b3424022823f8ebe46aee4ab
+          name: Uptime
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.3.0
+          key: sysUpTime
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: uptime
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 5e6f4f63a66f4a2abc14668e4bf6081b
+              expression: last(/Shtyl_UPS/sysUpTime)<10m
+              name: 'Был перезапущен'
+              priority: WARNING
+        -
+          uuid: bdf9fe7372ac4dba8697dc199bdc6933
+          name: 'upsOutputPercentLoad (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.5.1
+          key: upsAdvOutputLoad
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: '%'
+          description: 'Выходная нагрузка'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: f7f51894e0b44e4b84e69844ac2bb2ec
+          name: upsAlarmsPresent
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.6.1.0
+          key: upsAlarmsPresent
+          delay: 15m
+          history: 30d
+          trends: 36h
+          description: 'Текущее количество активных аварийных состояний.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 655cf3d09c5e4a3fa7c5ca37cecd16d6
+          name: upsAutoRestart
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.8.5.0
+          key: upsAutoRestart
+          delay: 15m
+          history: 30d
+          trends: 36h
+          description: 'AutoRestart (Установка для этого объекта значения «on» приведет к перезапуску системы ИБП после отключения, если отключение произошло во время потери питания в результате либо upsShutdownAfterDelay, либо состояния разрядки внутренней батареи. Установка для этого объекта значения «выкл.» предотвратит перезапуск системы ИБП после выключения до тех пор, пока оператор вручную или дистанционно явно не перезапустит ее. Если ИБП находится в режиме обратного отсчета запуска или перезагрузки, то ИБП не перезапустится до тех пор, пока эта задержка не будет удовлетворена.)'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 27d9e6a7d9834889b74621a8afcbb049
+          name: 'upsBatteryCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.6.0
+          key: upsBatteryCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Батарея ток'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 0b7ae35d1c654f48b8e5035394d57245
+          name: upsBatteryStatus
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.1.0
+          key: upsBatteryStatus
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: |
+            Индикация оставшейся емкости батарей системы ИБП.
+            batteryNormal(2)
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 5b8dcd664ad64262a26698141a600da3
+              expression: last(/Shtyl_UPS/upsBatteryStatus)=4
+              name: 'Батарея имеет состояние внутренней ошибки'
+              priority: AVERAGE
+            -
+              uuid: 1317f871123f45fa82d438f0ed48be1b
+              expression: last(/Shtyl_UPS/upsBatteryStatus)=3
+              name: 'Низкий заряд батареи'
+              priority: AVERAGE
+        -
+          uuid: ade7cf576b6445a8a8eadb901748d64c
+          name: upsBatteryTemperature
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.7.0
+          key: upsBatteryTemperature
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: °C
+          description: |
+            Батарея температура
+            
+            upsBatteryTemperature 
+            upsAdvBatteryTemperature
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 29a1bfb0876a4a09a73abababc8cd1ca
+              expression: 'min(/Shtyl_UPS/upsBatteryTemperature,{$TIME.PERIOD}) > {$BATTERY.TEMP.MAX.WARN}'
+              name: 'Батарея имеет высокую температуру'
+              event_name: 'Аккумулятор имеет высокую температуру (выше {$BATTERY.TEMP.MAX.WARN} ℃ в течение {$TIME.PERIOD})'
+              opdata: 'Текущая температура: {ITEM.LASTVALUE1}'
+              priority: HIGH
+        -
+          uuid: 4baf46dc79d14cda8b7e308318092619
+          name: 'upsBypassCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.3.1.3.1
+          key: upsBypassCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Байпас ток'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 24fa39243a5c401fba867b524d5a51c7
+          name: 'upsBypassFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.1.0
+          key: upsBypassFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Байпас частота'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 296fca88d47544b5b6ab77bbb91143d1
+          name: upsBypassLineIndex
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.3.1.1.1
+          key: upsBypassLineIndex
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Байпас индекс линии'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 0e761e764ed74a16a515f28324ba7756
+          name: 'upsBypassPower (W)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.3.1.4.1
+          key: upsBypassPower
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: W
+          description: 'Байпас нагрузка'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 8abcda3207774f7080e57c2f245a51ad
+          name: 'upsBypassVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.3.1.2.1
+          key: upsBypassVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: V
+          description: 'Байпас напряжение'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 4996dbef83cb48869962e30e95ca6e50
+          name: 'upsConfigAudibleStatus (Status)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.8.0
+          key: upsConfigAudibleStatus
+          delay: 15m
+          history: 30d
+          trends: 36h
+          description: "Запрошенное состояние звуковой сигнализации.\_В отключенном состоянии звуковой сигнал никогда не должен звучать.\_Включенное состояние является самоописываемым.\_Установка для этого объекта значения muted(3) при звучании звуковой сигнализации временно отключит сигнал тревоги.\_Он будет оставаться приглушенным до тех пор, пока обычно не перестанет звучать, а значение, возвращаемое для операций чтения в течение этого периода, будет равно muted(3).\_В конце этого периода значение должно вернуться к enable(2).\_Запись значения muted(3), когда звуковая сигнализация не звучит, должна быть принята, но в противном случае не будет иметь никакого эффекта."
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: adb6499c9fce407196a7a2a10ef3acb2
+          name: 'upsConfigHighVoltageTransferPoint (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.10.0
+          key: upsConfigHighVoltageTransferPoint
+          delay: 15m
+          history: 30d
+          trends: 36h
+          units: V
+          description: 'Максимальное линейное напряжение, допустимое до того, как система ИБП перейдет на резервное питание от батарей заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: f3275a957b2645beb18de91b76d9bda1
+          name: 'upsConfigInputFreq  (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.2.0
+          key: upsConfigInputFreq
+          delay: 15m
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Номинальная входная частота заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 758b543219bb44c59c1144d9bd495a17
+          name: 'upsConfigInputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.1.0
+          key: upsConfigInputVoltage
+          delay: 15m
+          history: 30d
+          trends: 36h
+          units: V
+          description: 'Величина номинального входного напряжения заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 6e5c2fbc95254ddfb0a16d9c10cb0903
+          name: 'upsConfigLowBattTime (Min)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.7.0
+          key: upsConfigLowBattTime
+          delay: 15m
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Min
+          description: 'Значение upsEstimatedMinutesRemaining, при котором объявляется состояние lowBattery'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 902e1bba15494e42ace01da7e9a481f9
+          name: 'upsConfigLowVoltageTransferPoint (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.9.0
+          key: upsConfigLowVoltageTransferPoint
+          delay: 15m
+          history: 30d
+          trends: 36h
+          units: V
+          description: 'Минимальное входное линейное напряжение, допустимое перед тем, как система ИБП перейдет на резервное питание от батарей заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 7ebe7d153fa047e2afef0ed977e53283
+          name: 'upsConfigOutputFreq  (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.4.0
+          key: upsConfigOutputFreq
+          delay: 15m
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Номинальная выходная частота заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 2c27cc027f7847178cbf9941864e76a9
+          name: 'upsConfigOutputPower (W)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.6.0
+          key: upsConfigOutputPower
+          delay: 15m
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: W
+          description: 'Величина номинальной реальной мощности заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 26ecf819b5024018aa95a8ae9cc082ab
+          name: 'upsConfigOutputVA (VA)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.5.0
+          key: upsConfigOutputVA
+          delay: 15m
+          history: 30d
+          trends: 36h
+          units: VA
+          description: 'Величина номинальных вольт-амперных характеристик заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: a0b65e53d2344f9faae1b8c91a93204c
+          name: 'upsConfigOutputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.3.0
+          key: upsConfigOutputVoltage
+          delay: 15m
+          history: 30d
+          trends: 36h
+          units: V
+          description: 'Величина номинального выходного напряжения заданная в настройках устройства.'
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 3fa619144db546ec9b6d6da882bf4278
+          name: 'upsEstimatedChargeRemaining (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.4.0
+          key: upsEstimatedChargeRemaining
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: '%'
+          description: 'Батарея заряд'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 04ad44a90c2944139b297b6704b1d0a4
+          name: upsEstimatedMinutesRemaining
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.3.0
+          key: upsEstimatedMinutesRemaining
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: m
+          description: |
+            Время работы от батарей
+             
+            upsEstimatedMinutesRemaining 
+            upsAdvRunTimeRemaining
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: d70fb6f09fff4eeda30af62add5375ff
+          name: 'upsIdentAgentSoftwareVersion (Ver.)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.4.0
+          key: upsIdentAgentSoftwareVersion
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Версия ПО платы расширения'
+          inventory_link: SOFTWARE_APP_B
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: e79fc913447141869ccff74e07b45ceb
+          name: upsIdentAttachedDevices
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.6.0
+          key: upsIdentAttachedDevices
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Строка нагрузка в идентификации'
+          inventory_link: SITE_NOTES
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 4036f8f0c7c8436f96cbfb75a9c82642
+          name: upsIdentManufacturer
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.1.0
+          key: upsIdentManufacturer
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Название производителя ИБП.'
+          inventory_link: VENDOR
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: f804cfdea6ac4752bb7dfddb84f76000
+          name: upsIdentModel
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.2.0
+          key: upsIdentModel
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Обозначение модели ИБП.'
+          inventory_link: TYPE
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 32482f20aca64012bd47349aed474feb
+          name: upsIdentName
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.5.0
+          key: upsIdentName
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Имя устройства в настройках устройства'
+          inventory_link: ALIAS
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: cfb04d0ac37340439b79a0e0d08b6654
+          name: 'upsIdentUPSSoftwareVersion (Ver.)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.3.0
+          key: upsIdentUPSSoftwareVersion
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          description: 'Версия ПО системы питания'
+          inventory_link: SOFTWARE_APP_A
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: d8eb49fdd7c54fb08a9cb1399484ac1c
+          name: 'upsInputCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.4.1
+          key: upsInputCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Входной ток'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: a3944bf2836842a3a390caee24034004
+          name: 'upsInputFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.2.1
+          key: upsInputFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Входная частота'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 29325e7d52f04dbd97bd71d271db9623
+              expression: 'min(/Shtyl_UPS/upsInputFrequency,{$TIME.PERIOD}) > 0 and (min(/Shtyl_UPS/upsInputFrequency,{$TIME.PERIOD}) > {$UPS.INPUT_FREQ.MAX.WARN} or max(/Shtyl_UPS/upsInputFrequency,{$TIME.PERIOD}) < {$UPS.INPUT_FREQ.MIN.WARN})'
+              name: 'Недопустимая входная частота'
+              event_name: 'Недопустимая входная частота (вне диапазона {$UPS.INPUT_FREQ.MIN.WARN}-{$UPS.INPUT_FREQ.MAX.WARN} Гц в течение {$TIME.PERIOD})'
+              opdata: 'Текущая частота {ITEM.LASTVALUE1}'
+              priority: HIGH
+        -
+          uuid: fa2f538e8b7648e9a6724a1a575a8ee8
+          name: upsInputLineBads
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.1.0
+          key: upsInputLineBads
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: |
+            Подсчет количества раз, когда вход выходил за
+            пределы допуска, как определено
+            производителем. Этот счетчик увеличивается на единицу каждый
+            раз, когда входные данные переходят от нуля строк, выходящих за пределы допуска, к одной или нескольким входным строкам, выходящим за пределы допуска.
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: a9c68d41a9df444c9d559c5090bfc21b
+          name: upsInputLineIndex
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.1.1
+          key: upsInputLineIndex
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Входной индекс линии'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 1711740b27864f138dd33d6c2fdd976e
+          name: upsInputNumLines
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.2.0
+          key: upsInputNumLines
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Входной номер линии'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: f5c63d11f3834a2aa91ea82a0ff8f70b
+          name: 'upsInputTruePower (W)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.5.1
+          key: upsInputTruePower
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: W
+          description: |
+            Входная мощность
+            
+            upsInputTruePower
+            upsAdvInputPower
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 1e3de0e4f8b243bcbd2d14a05fa001ed
+          name: 'upsInputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.3.1
+          key: upsInputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: 'Входное напряжение'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 41a1797487ae402aa5d06514698c22b0
+              expression: 'min(/Shtyl_UPS/upsInputVoltage,{$TIME.PERIOD}) > 0 and (min(/Shtyl_UPS/upsInputVoltage,{$TIME.PERIOD}) > {$UPS.INPUT_VOLT.MAX.WARN} or max(/Shtyl_UPS/upsInputVoltage,{$TIME.PERIOD}) < {$UPS.INPUT_VOLT.MIN.WARN})'
+              name: 'Недопустимое входное напряжение'
+              event_name: 'Недопустимое входное напряжение (вне диапазона {$UPS.INPUT_VOLT.MIN.WARN}–{$UPS.INPUT_VOLT.MAX.WARN} В в течение {$TIME.PERIOD})'
+              opdata: 'Текущее напряжение: {ITEM.LASTVALUE1}'
+              priority: HIGH
+        -
+          uuid: 3b58dd9f407749b998afdef54fb06307
+          name: 'upsOutputCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.3.1
+          key: upsOutputCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: |
+            Выходной ток
+            
+            upsOutputCurrent
+            upsAdvOutputCurrent
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 6c83a0b36f0e423abad79e6ac4b5f962
+          name: 'upsOutputFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.2.0
+          key: upsOutputFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: |
+            Выходная частота
+            
+            upsOutputFrequency
+            upsAdvOutputFrequency
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 60573b87c5c640e985cf2b550ce85826
+          name: upsOutputLineIndex
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.1.1
+          key: upsOutputLineIndex
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Выходной индекс линии'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: bf769f40ea324c59aabe3e7132f37b1f
+          name: 'upsOutputPower (W)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.4.1
+          key: upsOutputPower
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: W
+          description: |
+            Выходная мощность
+            
+            
+            upsOutputPower
+            upsAdvOutputPower
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+          triggers:
+            -
+              uuid: 28308ea272434e89a6b3f5358aa5652a
+              expression: 'min(/Shtyl_UPS/upsOutputPower,{$TIME.PERIOD} )> {$UPS.OUTPUT.MAX.WARN}'
+              name: 'Выходная нагрузка высокая'
+              event_name: 'Выходная нагрузка выше допустимой'
+              priority: HIGH
+        -
+          uuid: e97345ac41a34dacb8fcff3a13520603
+          name: upsOutputSource
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.1.0
+          key: upsOutputSource
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Батарея статус'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: c09449ffef624743a2d562730f24a42e
+          name: 'upsOutputVoltage (М)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.2.1
+          key: upsOutputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: |
+            Выходное нарпряжение
+            
+            upsOutputVoltage
+            upsAdvOutputVoltage
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: ad6435b770cf425690c040f80e121a78
+          name: upsSecondsOnBattery
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.33.1.2.2.0
+          key: upsSecondsOnBattery
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: s
+          description: 'Если устройство работает от батареи, время, прошедшее с момента последнего переключения ИБП на питание от батареи, или время с момента последнего перезапуска подсистемы управления сетью, в зависимости от того, что меньше. Ноль должен быть возвращен, если устройство не работает от батареи.'
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: 6841282a5cd44699a9867aec80f303f8
+          name: upsShutdownType
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.8.1.0
+          key: upsShutdownType
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: "Этот объект определяет характер действия, которое должно быть выполнено в момент, когда обратный отсчет объектов upsShutdownAfterDelay и upsRebootWithDuration достигает нуля.\_Установка для этого объекта значения output(1) указывает, что запросы на отключение должны вызывать отключение только выхода ИБП.\_Установка для этого объекта значения system(2) указывает, что запросы на отключение приведут к отключению всей системы ИБП."
+          tags:
+            -
+              tag: Shtyl
+              value: UPS
+        -
+          uuid: ba671b1c936f487ba1ddf8f385beb99c
+          name: 'SNMP agent availability'
+          type: INTERNAL
+          key: 'zabbix[host,snmp,available]'
+          history: 7d
+          trends: 30d
+          valuemap:
+            name: zabbix.host.available
+          triggers:
+            -
+              uuid: f68ace214cd842e487e3511f27585f45
+              expression: 'max(/Shtyl_UPS/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0'
+              name: 'Нет данных SNMP'
+              priority: WARNING
+      tags:
+        -
+          tag: class
+          value: power
+      macros:
+        -
+          macro: '{$BATTERY.TEMP.MAX.WARN}'
+          value: '55'
+          description: 'Максимальная температура батареи для выражения триггера.'
+        -
+          macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+          description: 'Интервал времени для выражения триггера доступности агента SNMP.'
+        -
+          macro: '{$SNMP_COMMUNITY}'
+          value: public
+        -
+          macro: '{$TIME.PERIOD}'
+          value: 15m
+          description: 'Период времени для выражения триггера.'
+        -
+          macro: '{$UPS.INPUT_FREQ.MAX.WARN}'
+          value: '50.3'
+          description: 'Максимальная входная частота для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_FREQ.MIN.WARN}'
+          value: '49.7'
+          description: 'Минимальная входная частота для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_VOLT.MAX.WARN}'
+          value: '243'
+          description: 'Максимальное входное напряжение для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_VOLT.MIN.WARN}'
+          value: '197'
+          description: 'Минимальное входное напряжение для триггерного выражения.'
+        -
+          macro: '{$UPS.OUTPUT.MAX.WARN}'
+          value: '80'
+          description: 'Максимальная выходная нагрузка в % для триггерного выражения.'
+      valuemaps:
+        -
+          uuid: 010ed42302cd4447942fa09c18046ec8
+          name: zabbix.host.available
+          mappings:
+            -
+              value: '0'
+              newvalue: 'not available'
+            -
+              value: '1'
+              newvalue: available
+            -
+              value: '2'
+              newvalue: unknown
+  graphs:
+    -
+      uuid: 3094d609314c477cb9b7df4704dbd448
+      name: 'UPS Current'
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsInputCurrent
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsOutputCurrent
+    -
+      uuid: fa207cd1df3043b6a4b38597bda8c859
+      name: 'UPS Estimated Minutes Remaining'
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsEstimatedMinutesRemaining
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsEstimatedChargeRemaining
+    -
+      uuid: 6c3678e3ca4842ff9d9175856443d972
+      name: 'UPS Voltage'
+      height: '400'
+      ymin_type_1: ITEM
+      ymin_item_1:
+        host: Shtyl_UPS
+        key: upsConfigLowVoltageTransferPoint
+      ymax_type_1: ITEM
+      ymax_item_1:
+        host: Shtyl_UPS
+        key: upsConfigHighVoltageTransferPoint
+      graph_items:
+        -
+          color: BFFF00
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsInputVoltage
+        -
+          sortorder: '1'
+          color: 00FF00
+          calc_fnc: ALL
+          item:
+            host: Shtyl_UPS
+            key: upsOutputVoltage
