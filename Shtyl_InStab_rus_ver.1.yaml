@@ -1,0 +1,1201 @@
+zabbix_export:
+  version: '6.4'
+  date: '2023-02-10T13:30:47Z'
+  template_groups:
+    -
+      uuid: 3dcd5bbe90534f9e8eb5c2d53756af63
+      name: Templates/Power
+  templates:
+    -
+      uuid: dbfaa189df3c4d4b8b9b7021ff9372c7
+      template: Shtyl_inStab
+      name: Shtyl_inStab
+      description: |
+        https://github.com/dvilin/Shtyl-Zabbix
+        rus ver.1
+      groups:
+        -
+          name: Templates/Power
+      items:
+        -
+          uuid: 4ee5a78720c040949e21904d18ddd603
+          name: 'Device Name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.1.2.0
+          key: deviceName
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: NAME
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 908cf5e260364f30815f2350f631af7d
+          name: ipgateway
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.100.1.3.0
+          key: gateway
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: HOST_ROUTER
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 326feab70470470e930e85c266a1d4f8
+          name: ifPhysAddress
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.6.1
+          key: ifPhysAddress
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: MACADDRESS_A
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: f1f4877bb64b4121bc47d23c83ab32fa
+          name: inStabAlarmFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.3.0
+          key: inStabAlarmFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Наличие аварий. Нет аварий - 0, есть аварии - 1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+          triggers:
+            -
+              uuid: c28098741d5b49d4b61ae75ce71d051e
+              expression: last(/Shtyl_inStab/inStabAlarmFlag)=1
+              name: 'Есть аварии на устройстве'
+              priority: INFO
+              manual_close: 'YES'
+        -
+          uuid: a7b0be0d06464b48ab4dae1d2afb8929
+          name: 'inStabBypassFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.5.4.0
+          key: inStabBypassFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Частота байпаса'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: e9010f8754494fabb1fcb7a8196bdf80
+          name: inStabBypassInputPhasesNum
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.5.0
+          key: inStabBypassInputPhasesNum
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Количество фаз байпаса'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 407506d6d73e4a14be6c6a85558c50a6
+          name: inStabBypassSeparateInput
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.6.0
+          key: inStabBypassSeparateInput
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Наличие отдельного ввода байпаса'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 4d3c624cfcc145ddaf15dbf319e0e5df
+          name: inStabBypasStatusFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.5.0
+          key: inStabBypasStatusFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Состояние байпаса. Выключен - 0, включен - 1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 9283d0f98e2d4a28bb9bc52ff80608cd
+          name: inStabCCNumber
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.3.1.0
+          key: inStabCCNumber
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Количество контрольных контактов'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: dfc6f51ceb994810873c0b182317a491
+          name: inStabConnectedFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.2.0
+          key: inStabConnectedFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Наличие связи  Ethernet адаптера с силовым модулем 1 - связь есть, 0 - связи нет'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+          triggers:
+            -
+              uuid: a5644196706046c2aa019880a096d28a
+              expression: last(/Shtyl_inStab/inStabConnectedFlag)=0
+              name: 'Нет связи платы с устройством'
+              priority: AVERAGE
+            -
+              uuid: 31e24212f3ef4a9da10203923d4344b9
+              expression: last(/Shtyl_inStab/inStabConnectedFlag)=0
+              name: 'Состояние байпаса выключен'
+              priority: INFO
+              manual_close: 'YES'
+        -
+          uuid: bfefd0f2c9434ebe8f091c92a93c3349
+          name: 'inStabControlUnitTemperature ( °C)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.10.0
+          key: inStabControlUnitTemperature
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: °C
+          description: 'Температура контроллера'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 16ac3184fa594d6caf0324d8cf611fc8
+          name: inStabEmergencyStopFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.9.0
+          key: inStabEmergencyStopFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Флаг ручного аварийного отключения (Emergency stop) 0 - нет, 1 - да'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+          triggers:
+            -
+              uuid: 40aef08d899d48a28f62194bda405005
+              expression: last(/Shtyl_inStab/inStabEmergencyStopFlag)=1
+              name: 'Ручное аварийное отключение'
+              priority: AVERAGE
+              description: 'Флаг ручного аварийного отключения (Emergency stop) 0 - нет, 1 - да'
+        -
+          uuid: b1a58d978e8c4cf788c9c1495880434a
+          name: 'inStabInputGridFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.7.0
+          key: inStabInputGridFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Частота входной сети'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: b98cf6a00fae47b8a74013840a778c3f
+          name: inStabInputPhaseNumber
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.1.0
+          key: inStabInputPhaseNumber
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Количество фаз на входе'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 24c0b1ded4da4c3e9257d7bb04211ec9
+          name: inStabInVoltageFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.4.0
+          key: inStabInVoltageFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Наличие входного напряжения. Нет напряжения - 1, есть - 0'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: ed0e3db828f94cd6b6691becfe4109ef
+          name: inStabIODeviceType
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.7.0
+          key: inStabIODeviceType
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: |
+            Тип Стабилизатора по количеству входных и выходных фаз
+            0 - однофазный вход, однофазный выход ИБП,
+                 1 - трехфазный вход, трехфазный выход ИБП,
+                 2 - трехфазный вход, однофазный выход ИБП,
+                 3 - однофазный вход, трехфазный выход ИБП,
+                 10 - однофазный вход, однофазный выходной стабилизатор,
+                 11 - трехфазный ввод, трехфазный выходной стабилизатор,
+                 12 - трехфазный ввод, однофазный выходной стабилизатор,
+                 13 - вход однофазный, выход трехфазный стабилизатор"
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: cbed7bc5a4d847ba8b1a602d59322df7
+          name: 'inStabMaxACCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.2.0
+          key: inStabMaxACCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Максимальный рабочий ток'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 9c58eb26ad464efa9c5c06ebd2c8eddb
+          name: inStabNormalModeFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.7.0
+          key: inStabNormalModeFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Нормальный режим работы. Байпас или от батарей - 1, норма - 0'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 011ebbb024ec4b898b1dd612ce201b02
+          name: inStabOutputPhaseNumber
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.2.0
+          key: inStabOutputPhaseNumber
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          description: 'Количество фаз на выходе'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 087d0c00a17e4638aee93053495af462
+          name: inStabOverloadFlag
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.8.0
+          key: inStabOverloadFlag
+          delay: '60'
+          history: 30d
+          trends: 36h
+          description: 'Флаг перегрузки. Перегрузка - 1, норма - 0'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+          triggers:
+            -
+              uuid: 2fb72811274941c2913023e35187399d
+              expression: last(/Shtyl_inStab/inStabOverloadFlag)=1
+              name: Перегрузка
+              priority: HIGH
+              description: 'Флаг перегрузки. Перегрузка - 1, норма - 0'
+        -
+          uuid: 9aaecc76901b4409b86ef5f0230a3c68
+          name: 'inStabPhaseABypassVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.5.1.0
+          key: inStabPhaseABypassVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: 'Напряжение байпаса фазы А'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 68201df7877f4faf8781fd673a08504d
+          name: 'inStabPhaseAInputCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.4.0
+          key: inStabPhaseAInputCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Входной полный ток фазы A'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 73c16b218606453ba3a130ab1c763bec
+          name: 'inStabPhaseAInputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.2.0
+          key: inStabPhaseAInputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: 'Входное напряжение фазы A'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: b06ac3e3c9ea452eae4f69a9d625eb6e
+          name: 'inStabPhaseALoadPercent (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.10.0
+          key: inStabPhaseALoadPercent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: '%'
+          description: 'Нагрузка по фазе А в процентах'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 3549a9a54a7244e79f1e480a49e42e10
+          name: 'inStabPhaseAOutputActiveCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.7.0
+          key: inStabPhaseAOutputActiveCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Выходной активный ток фазы А'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 1256e78787cd4614ac4e3ad68e222612
+          name: 'inStabPhaseAOutputFullCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.4.0
+          key: inStabPhaseAOutputFullCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: A
+          description: 'Выходной полный ток фазы А'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 0c04173d90bc42528551a635895ba5e1
+          name: 'inStabPhaseAOutputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.1.0
+          key: inStabPhaseAOutputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: 'Выходное напряжение фазы А'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: efca23d21f344cd3b6f610cc32f7ecfc
+          name: 'inStabPhaseBBypassVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.5.2.0
+          key: inStabPhaseBBypassVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Напряжение байпаса фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 805b0d1a5b564e15bfde2ada3b6e4cbf
+          name: 'inStabPhaseBInputCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.5.0
+          key: inStabPhaseBInputCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Входной полный ток фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 3ef2f50fb2994ba59d518ba8c6d2a212
+          name: 'inStabPhaseBInputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.2.0
+          key: inStabPhaseBInputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Входное напряжение фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 6b5ba4d7bb6a4e38b969313043db41ea
+          name: 'inStabPhaseBLoadPercent (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.11.0
+          key: inStabPhaseBLoadPercent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: '%'
+          description: 'Нагрузка по фазе B в процентах'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 11554bf2dff8476482fa2559b17489ae
+          name: 'inStabPhaseBOutputActiveCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.8.0
+          key: inStabPhaseBOutputActiveCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Выходной активный ток фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 8e4948774aa4465f90cc221682e51710
+          name: 'inStabPhaseBOutputFullCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.5.0
+          key: inStabPhaseBOutputFullCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Выходной полный ток фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 2b29c4b97e7d42f3804eacfa4cad6a78
+          name: 'inStabPhaseBOutputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.2.0
+          key: inStabPhaseBOutputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Выходное напряжение фазы B'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: f8004583ca7f415eb96a2098a4200cf5
+          name: 'inStabPhaseCBypassVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.5.3.0
+          key: inStabPhaseCBypassVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Напряжение байпаса фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 2e7d8d7a716448398fae785e0287798d
+          name: 'inStabPhaseCInputCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.6.0
+          key: inStabPhaseCInputCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Входной полный ток фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 6ef99aaa8f3e4f95ac9e740fa3d49db4
+          name: 'inStabPhaseCInputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.4.3.0
+          key: inStabPhaseCInputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Входное напряжение фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 700297a0135b4860b93f5d9f1b58e3ec
+          name: 'inStabPhaseCLoadPercent (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.12.0
+          key: inStabPhaseCLoadPercent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: '%'
+          description: 'Нагрузка по фазе C в процентах'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: e77a7f98facd4fecaabb67e2eb8cfbac
+          name: 'inStabPhaseCOutputActiveCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.9.0
+          key: inStabPhaseCOutputActiveCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Выходной активный ток фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 47fe999e4dab4200a9148bbf0cac21cf
+          name: 'inStabPhaseCOutputFullCurrent (A)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.6.0
+          key: inStabPhaseCOutputFullCurrent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: A
+          description: 'Выходной полный ток фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 6da66bfe18744c478eacc8cb7afd4591
+          name: 'inStabPhaseCOutputVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.6.3.0
+          key: inStabPhaseCOutputVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          status: DISABLED
+          value_type: FLOAT
+          units: V
+          description: 'Выходное напряжение фазы C'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 9cab0e1f96f8434283b14fb37332201d
+          name: 'inStabRatedACVoltage (V)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.1.0
+          key: inStabRatedACVoltage
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: V
+          description: 'Номинальное напряжение AC'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: f1b317d4ed3a44119df604ef31429230
+          name: 'inStabRatedFrequency (Hz)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.3.0
+          key: inStabRatedFrequency
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: Hz
+          description: 'Номинальная частота'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: cde88ab6f8444fcbaf807298f5eac3c5
+          name: 'inStabRatedTotalPower (W)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.4.4.0
+          key: inStabRatedTotalPower
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: W
+          description: 'Номинальная полная мощность'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 8b88a4da0ab143498377ad2c2566144f
+          name: 'inStabShtylLoadPercent (%)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.2.3.0
+          key: inStabShtylLoadPercent
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: '%'
+          description: 'Загрузка в процентах'
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 42ef63390dab4bd18db55a8f99406258
+          name: 'inStabTemperature (°C)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.2.5.1.6.0
+          key: inStabTemperature
+          delay: '60'
+          history: 30d
+          trends: 36h
+          value_type: FLOAT
+          units: °C
+          description: 'Температура радиатора'
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+          triggers:
+            -
+              uuid: 3b89a284368545abbabbe93695a2d85d
+              expression: last(/Shtyl_inStab/inStabTemperature)>35
+              name: 'Температура выше 35'
+              priority: WARNING
+        -
+          uuid: 445135bab00847d2b96785a4d79ed0ff
+          name: ipAdress
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.100.1.1.0
+          key: ipAdress
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: HOST_NETWORKS
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: aaf16398078641479e5b06bc3e66dd37
+          name: Contact
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.4.0
+          key: sysContact
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: CONTACT
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 213f16a4471f477f95f0f8141dfa17a1
+          name: 'Device Description'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.1.0
+          key: sysDescr
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: OS_FULL
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: 992215a167724c2fbaaa51389ca03a0d
+          name: 'Device Location'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.6.0
+          key: sysLocation
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: LOCATION
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: Shtyl
+              value: InStab
+        -
+          uuid: a8f6b535b0ef438d91bf36368549cad6
+          name: Uptime
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.3.0
+          key: sysUpTime
+          delay: '60'
+          history: 30d
+          trends: 36h
+          units: uptime
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          triggers:
+            -
+              uuid: 0d425da2737146288b310d17714934b7
+              expression: last(/Shtyl_inStab/sysUpTime)<10m
+              name: 'Был перезапущен'
+              priority: WARNING
+        -
+          uuid: de6f8065cc244d3284eb3291e97ff475
+          name: versionNumber
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.34498.1.3.0
+          key: versionNumber
+          delay: 15m
+          history: 30d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+        -
+          uuid: 3298b0dd0eab4da59658aac80a6a8ccd
+          name: 'SNMP agent availability'
+          type: INTERNAL
+          key: 'zabbix[host,snmp,available]'
+          history: 7d
+          trends: 30d
+          valuemap:
+            name: zabbix.host.available
+          triggers:
+            -
+              uuid: 30f56ff8ccf64ad6af3a6f749fa611ca
+              expression: 'max(/Shtyl_inStab/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0'
+              name: 'Нет данных SNMP'
+              priority: WARNING
+      tags:
+        -
+          tag: class
+          value: power
+      macros:
+        -
+          macro: '{$BATTERY.TEMP.MAX.WARN}'
+          value: '55'
+          description: 'Максимальная температура батареи для выражения триггера.'
+        -
+          macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+          description: 'Интервал времени для выражения триггера доступности агента SNMP.'
+        -
+          macro: '{$SNMP_COMMUNITY}'
+          value: public
+        -
+          macro: '{$TIME.PERIOD}'
+          value: 15m
+          description: 'Период времени для выражения триггера.'
+        -
+          macro: '{$UPS.INPUT_FREQ.MAX.WARN}'
+          value: '50.3'
+          description: 'Максимальная входная частота для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_FREQ.MIN.WARN}'
+          value: '49.7'
+          description: 'Минимальная входная частота для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_VOLT.MAX.WARN}'
+          value: '243'
+          description: 'Максимальное входное напряжение для триггерного выражения.'
+        -
+          macro: '{$UPS.INPUT_VOLT.MIN.WARN}'
+          value: '197'
+          description: 'Минимальное входное напряжение для триггерного выражения.'
+        -
+          macro: '{$UPS.OUTPUT.MAX.WARN}'
+          value: '80'
+          description: 'Максимальная выходная нагрузка в % для триггерного выражения.'
+      valuemaps:
+        -
+          uuid: 5eea696adc624877b8fc3c358f261832
+          name: zabbix.host.available
+          mappings:
+            -
+              value: '0'
+              newvalue: 'not available'
+            -
+              value: '1'
+              newvalue: available
+            -
+              value: '2'
+              newvalue: unknown
+  graphs:
+    -
+      uuid: 3c7fc569bed04f2888fb1a37c38a32a8
+      name: '1. InStab Voltage A'
+      yaxismin: '150'
+      yaxismax: '250'
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        -
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabPhaseAOutputVoltage
+        -
+          sortorder: '1'
+          color: 00FF00
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabPhaseABypassVoltage
+    -
+      uuid: 9363dbe01f764ffca35fe8e1fdddaa19
+      name: 'inStab Current A'
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabPhaseAInputCurrent
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabPhaseAOutputActiveCurrent
+        -
+          sortorder: '2'
+          color: 2774A4
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabPhaseAOutputFullCurrent
+    -
+      uuid: 1a94c2826e3d48398089f210e16b1aad
+      name: 'inStab Frequency'
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabBypassFrequency
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabInputGridFrequency
+        -
+          sortorder: '2'
+          color: 2774A4
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabRatedFrequency
+    -
+      uuid: 51f78deef32e450f962d376949ed3995
+      name: 'inStab Temp'
+      graph_items:
+        -
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabControlUnitTemperature
+        -
+          sortorder: '1'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: Shtyl_inStab
+            key: inStabTemperature
